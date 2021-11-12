@@ -1,0 +1,29 @@
+---
+
+- name: copy minicom script
+  copy:
+    src:  roles/bed/files/at_common.txt
+    dest: /tmp/
+
+- name: config minicom
+  blockinfile:
+    path: /etc/minicom/minirc.dfl
+    create: yes
+    block: |
+      pu minit
+      pu mreset
+      pu mhangup
+  become: yes
+
+- name: run minicom script
+  shell: |
+    rm -f ok
+    killall -9 minicom
+    minicom -t vt100 -o -b 115200 -D /dev/ttyUSB0 -S /tmp/at_common.txt
+    ec=0; [ ! -f ok ] && ec=1
+    rm -f ok /tmp/at_common.txt
+    exit $ec
+  register: atres
+
+- name: show results
+  debug: msg={{ atres.stdout_lines[9:] | join('\n') }}

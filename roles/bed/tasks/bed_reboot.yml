@@ -1,0 +1,11 @@
+---
+
+- name: Reset usbrelay ports default state
+  shell: |
+    # all off
+    usbrelay A0001_9=0 >/dev/null || true
+    # power on module, toggle reset pin at port2
+    usbrelay A0001_2=1 >/dev/null || true
+    usbrelay A0001_1=1 >/dev/null || true
+    sleep 0.5
+    usbrelay A0001_2=0 >/dev/null || true

@@ -1,0 +1,22 @@
+---
+
+- name: Check hostname
+  shell: |
+    expect_host=`echo "{{ inventory_hostname }}" | \
+     sed -rn 's/^([^-]+)_([^-]+)_([^-]+)$/\1-er-lxtb[0-9a-f]+\2-pci\3/p'`
+    hostname | grep -E "$expect_host" && exit 0
+    echo "$(hostname) does not match $expect_host" >&2
+    exit 1
+  ignore_errors: yes
+
+- name: Get available ports
+  shell: |
+    cd /sys/bus/usb/devices
+    ls -1 | grep -v : | xargs -r -n1 -I {} bash -c \
+     'printf "%-16s %-16s %s\n" "{}" \
+      "$(cat {}/idVendor):$(cat {}/idProduct)" \
+      "$(cat {}/manufacturer 2>/dev/null),$(cat {}/product 2>/dev/null)"'
+  register: ports
+
+- name: Show available ports
+  debug: msg={{ ports.stdout }}

@@ -1,0 +1,10 @@
+---
+
+- name: Reset USB buses
+  script: roles/bed/files/usb_rst.sh
+  become: yes
+  register: reset
+
+- name: Show results
+  debug: msg={{ reset.stdout }}
+

@@ -1,0 +1,6 @@
+---
+
+- set_fact:
+    main_script: "{{ 'bed_' + (main | default('status')) + '.yml' }}"
+
+- include: "{{ role_path + '/tasks/' + main_script }}"

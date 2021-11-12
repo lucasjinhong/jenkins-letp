@@ -1,0 +1,6 @@
+---
+
+- set_fact:
+    main_script: "{{ 'env_' + (main | default('install')) + '.yml' }}"
+
+- include: "{{ role_path + '/tasks/' + main_script }}"

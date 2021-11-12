@@ -1,0 +1,24 @@
+verbose on
+timeout 2
+
+send ati3\r
+expect {
+"\r\nOK\r\n" break
+timeout 1 exit 1
+}
+
+send at+cgsn\r
+expect {
+"\r\nOK\r\n" break
+timeout 1 exit 1
+}
+
+send at+ccid\r
+expect {
+"\r\nOK\r\n" break
+timeout 1 exit 1
+}
+
+! echo 1>ok
+! killall -9 minicom
+exit 0
