@@ -25,12 +25,12 @@ def main():
     args = get_args()
 
     cmd_letp = 'letp_wrap -y'
-    cmd_ssh = ['sshpass', '-p', 'vagrant', 'ssh', '-tt', 'vagrant@']
+    cmd_ssh =  'sshpass -p vagrant ssh -tt vagrant@'
 
     for i in args.Tests:
         cmd_letp = cmd_letp + ' ' + i
 
-    cmd_ssh[-1] = cmd_ssh[-1] + get_testbed_ip(args.Testbed_ID)
+    cmd_ssh = cmd_ssh+ get_testbed_ip(args.Testbed_ID)
 
     print('Test to run: ', args.Tests)
     print('Connect to Testbed: ', args.Testbed_ID)
