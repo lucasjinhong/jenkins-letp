@@ -36,6 +36,7 @@ def main():
     print('Connect to Testbed: ', args.Testbed_ID)
 
     sshProcess = subprocess.Popen(cmd_ssh,
+                                shell=True,
                                 stdin = subprocess.PIPE, 
                                 stdout = subprocess.PIPE,
                                 universal_newlines=True,
