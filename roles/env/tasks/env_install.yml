@@ -1,81 +1,57 @@
 ---
 
+#Task 1
 - block:
+  - debug:
+      msg: 'Task 1: Install package needed'
 
-  - name: Use cache from TPE
-    copy:
-      content: |
-        Acquire::http::Proxy  "http://twtpe-er-core7:3142/";
-      dest: /etc/apt/apt.conf.d/01proxy
-    when: inventory_hostname.startswith('twtpe')
+  - name: Install package needed
+    include: "{{ role_path + '/tasks/' + 'env_package.yml' }}"
 
+#Task 2
+- block:
+  - debug:
+      msg: 'Task 2: Install python, pyenv, pipenv and set global python version'
 
-  - name: Install hidraw
-    apt:
-      name: libhidapi-hidraw0
-      state: present
+  - name: Install python, pyenv, pipenv and set global python version
+    include: "{{ role_path + '/tasks/' + 'env_python.yml' }}"
 
-  - name: Check if usbrelay is installed
-    command: dpkg-query -W usbrelay
-    register: usbrelay_deb
-    failed_when: usbrelay_deb.rc > 1
-    changed_when: usbrelay_deb.rc == 1
+#Task 3
+- block:
+  - debug:
+      msg: 'Task 3: Create WorkDir and copy ssh key to testbed'
 
-  - block:
+  - name: Create WorkDir and copy ssh key to testbed
+    include: "{{ role_path + '/tasks/' + 'env_workdir.yml' }}"
 
-    - name: Download usbrelay deb
-      get_url:
-        url: https://github.com/PaulChanHK/usbrelay/releases/download/0.7-pkg.1/usbrelay_1.0_all.deb
-        dest: /tmp/usbrelay_1.0_all.deb
+#Task 4
+- block:
+  - debug:
+      msg: 'Task 4: Git Clone and Repo init, sync'
 
-    - name: Install usbrelay deb
-      apt:
-        deb: /tmp/usbrelay_1.0_all.deb
+  - name: Git Clone and Repo init, sync
+    include: "{{ role_path + '/tasks/' + 'env_gitrepo.yml' }}"
 
-    - name: Clean usbrelay deb
-      file: state=absent path=/tmp/usbrelay_1.0_all.deb
+#Task 5
+- block:
+  - debug:
+      msg: 'Task 5: pipenv installation'
 
-    - name: Update udev rules
-      shell: |
-        cat > /etc/udev/rules.d/50-usb-hid-relay.rules <<EOM
-        KERNEL=="hidraw*", ATTRS{idVendor}=="0519", ATTRS{idProduct}=="2018", MODE="0666", SYMLINK+="hidrawport%b"
-        EOM
-        udevadm control --reload-rules && udevadm trigger
+  - name: pipenv installation
+    include: "{{ role_path + '/tasks/' + 'env_pipenv.yml' }}"
 
-    - include: roles/bed/tasks/bed_reboot.yml
+#Task 6
+- block:
+  - debug:
+      msg: 'Task 6: Install usb_relay'
 
-    when: usbrelay_deb.rc == 1
+  - name: Install usb_relay
+    include: "{{ role_path + '/tasks/' + 'env_usbrelay.yml' }}"
 
-  - name: Install python3
-    apt:
-      name: python3
-      state: present
+#Task 7
+- block:
+  - debug:
+      msg: 'Task 7: Grant USB port access and copy new file to testbed'
 
-  - name: Install python3-pip
-    apt:
-      name: python3-pip
-      state: present
-
-  - name: Check if usbrelay_py is installed
-    command: pip3 show usbrelay-py
-    register: usbrelay_py
-    failed_when: usbrelay_py.rc > 1
-    changed_when: usbrelay_py.rc == 1
-
-  - block:
-
-    - name: Download usbrelay_py whl
-      get_url:
-        url: https://github.com/PaulChanHK/usbrelay/releases/download/0.7-pkg.1/usbrelay_py-1.0-cp36-cp36m-linux_x86_64.whl
-        dest: /tmp/usbrelay_py-1.0-cp36-cp36m-linux_x86_64.whl
-
-    - name: Install usbrelay_py whl
-      shell: |
-        pip3 install /tmp/usbrelay_py-1.0-cp36-cp36m-linux_x86_64.whl
-
-    - name: Clean usbrelay_py whl
-      file: state=absent path=/tmp/usbrelay_py-1.0-cp36-cp36m-linux_x86_64.whl
-
-    when: usbrelay_py.rc == 1
-
-  become: yes
+  - name: Grant USB port access and copy new file to testbed
+    include: "{{ role_path + '/tasks/' + 'env_misc.yml' }}"

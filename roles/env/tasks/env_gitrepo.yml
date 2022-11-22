@@ -1,0 +1,88 @@
+---
+  
+- block:
+  - name: check repo file exist
+    stat:
+      path: /usr/local/bin/repo
+    register: repo_file
+    changed_when: not repo_file.stat.exists
+
+  - block: #install repo
+    - name: disable ipv6
+      sysctl:
+        name: "{{ item.name }}"
+        value: 1
+      with_items: 
+        - { name: 'net.ipv6.conf.all.disable_ipv6' }
+        - { name: 'net.ipv6.conf.default.disable_ipv6' }
+        - { name: 'net.ipv6.conf.lo.disable_ipv6' }
+      become: yes
+      become_user: root  
+
+    - name: git config
+      shell: |
+        git config --global user.name "lkoh"
+        git config --global user.email lkoh@sierrawirelesss.com
+    
+    - name: curl repo
+      get_url:
+        url: http://cgit.legato/external/repo.git/plain/repo
+        dest: /usr/local/bin/repo
+
+    - name: chmode repo
+      file: 
+        path: /usr/local/bin/repo
+        mode: +x
+
+    become_user: root
+    when: not repo_file.stat.exists
+
+  - name: check LeTP file exist
+    stat:
+      path: ~/WorkDir/LeTP
+    register: LeTP
+
+  - name: check integration file exist
+    stat:
+      path: ~/WorkDir/integration
+    register: integration
+
+  - block: #git clone
+    - name: git clone
+      git:
+        repo: "{{ item.repo }}"
+        dest: "{{ item.dest }}"
+      with_items: 
+        - { repo: 'ssh://lkoh@master.gerrit.legato:29418/oem/integration.git', dest: '~/WorkDir/integration'}
+        - { repo: 'ssh://lkoh@master.gerrit.legato:29418/Legato/LeTP', dest: '~/WorkDir/LeTP'}
+
+    when: not integration.stat.exists or not LeTP.stat.exists
+
+  - name: repo init
+    shell: repo init -u git://gerrit-swi/manifest -m default_firmware_integration.xml
+    args:
+      chdir: ~/WorkDir
+
+  - name: repo sync
+    shell: repo sync
+    args:
+      chdir: ~/WorkDir
+    register: git_repo
+    failed_when: git_repo.rc > 2
+    changed_when: git_repo.rc == 1
+
+  - block: #if repo sync not complete
+    - name:
+      shell: repo sync --force-sync
+      args:
+        chdir: ~/WorkDir
+
+    - name: repo sync
+      shell: repo sync
+      args:
+        chdir: ~/WorkDir
+    
+    when: git_repo.rc == 1
+
+  become: yes
+  become_user: vagrant

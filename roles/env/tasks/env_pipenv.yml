@@ -1,0 +1,60 @@
+---
+
+- block:
+  - name: check pipenv is created
+    shell: pipenv --venv
+    args:
+      chdir: ~/WorkDir/integration/letp_wrapper
+    register: pipenv_ver
+    failed_when: pipenv_ver.rc > 1
+    changed_when: pipenv_ver.rc == 1
+
+  - block: #setup pipenv
+    - name: set pipenv python
+      shell: pipenv --python 3.6.9
+      args:
+        chdir: ~/WorkDir/integration/letp_wrapper
+
+    - name: copy lockfile
+      ansible.builtin.copy:
+        src: ~/WorkDir/integration/letp_wrapper/Pipfile
+        dest: ~/WorkDir/integration/letp_wrapper
+        owner: vagrant
+        group: vagrant
+
+    - name: wget autoflasher-1.7.9.0.tar.gz
+      get_url:
+        url: "http://carmd-ev-fwpypi:7001/packages/autoflasher-1.7.9.0.tar.gz"
+        dest: ~/WorkDir/integration/letp_wrapper
+      retries: 1
+      delay: 10
+
+    - name: pipenv install 
+      shell: pipenv install autoflasher-1.7.9.0.tar.gz --skip-lock
+      args:
+        chdir: ~/WorkDir/integration/letp_wrapper
+      register: pipenv_result
+      until: pipenv_result.rc == 0
+      ignore_errors: yes
+      retries: 3
+      delay: 10
+
+    - name: remove autoflasher document
+      file:
+        state: absent
+        path: ~/WorkDir/integration/letp_wrapper/autoflasher-1.7.9.0.tar.gz 
+
+    when: pipenv_ver.rc == 1
+
+  - name: downgrade the pytest version
+    shell: pipenv run pip install pytest==6.2.5
+    args:
+      chdir: ~/WorkDir/integration/letp_wrapper
+
+  - name: update jinja2 version
+    shell: pipenv run pip install -U Jinja2
+    args:
+      chdir: ~/WorkDir/integration/letp_wrapper
+      
+  become: yes
+  become_user: vagrant

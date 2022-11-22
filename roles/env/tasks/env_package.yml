@@ -1,0 +1,65 @@
+---
+
+- block:
+  - name: Install Package
+    apt:
+      name: "{{ item.name }}"
+      state: present
+    with_items:
+      - { name: 'python3-pip' }
+      - { name: 'minicom' }
+      - { name: 'git' }
+      - { name: 'build-essential' }
+      - { name: 'libssl-dev' }
+      - { name: 'zlib1g-dev' }
+      - { name: 'libbz2-dev' }
+      - { name: 'libreadline-dev' }
+      - { name: 'libsqlite3-dev' }
+      - { name: 'wget' }
+      - { name: 'curl' }
+      - { name: 'llvm' }
+      - { name: 'libncurses5-dev' }
+      - { name: 'libncursesw5-dev' }
+      - { name: 'xz-utils' }
+      - { name: 'tk-dev' }
+      - { name: 'libffi-dev' }
+      - { name: 'liblzma-dev' }
+      - { name: 'python-openssl' }
+      - { name: 'net-tools' }
+      - { name: 'libarchive-dev' }
+      - { name: 'libhidapi-hidraw0' }
+      - { name: 'p7zip-full' }
+      - { name: 'zip' }
+    delay: 100
+
+  - name: install pipenv package
+    command: pip install pipenv==2021.5.29
+
+  - name: install pyOpenSSL package
+    command: pip install pyOpenSSL --upgrade
+
+  - name: Remove package
+    apt:
+      name: "{{ item.name }}"
+      state: absent
+    with_items:
+      - { name: 'avahi-daemon' }
+      - { name: 'repo' }
+
+  - name: Apt update
+    apt:
+      update_cache: yes
+      state: present
+
+  - name: Apt upgrade
+    apt:
+      upgrade: yes
+      state: present
+
+  - name: Apt autoremove
+    apt:
+      autoremove: yes
+      state: present
+
+  become: yes
+  become_user: root

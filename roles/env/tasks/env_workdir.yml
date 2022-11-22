@@ -1,0 +1,30 @@
+---
+
+- block:
+  - name: check WorkDir exist
+    stat:
+      path: ~/WorkDir
+    register: WorkDir_file
+    changed_when: not WorkDir_file.stat.exists
+
+  - block: 
+    - name: create WorkDir
+      file:
+        path: ~/WorkDir
+        state: directory
+
+    - name: copy key to testbed
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: ~/.ssh
+        owner: vagrant
+        group: vagrant
+        mode: '600'
+      with_items:
+        - { src: '~/.ssh/core3_lkoh' }
+        - { src: '~/.ssh/config' }
+        
+    when: not WorkDir_file.stat.exists
+
+  become: yes
+  become_user: vagrant

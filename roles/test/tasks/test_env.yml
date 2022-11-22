@@ -1,0 +1,32 @@
+---
+
+- block:
+  - name: test python global available
+    shell: ~/.pyenv/libexec/pyenv version
+    register: pyenv_global
+    failed_when: "not '3.6.9' in pyenv_global.stdout"
+    args:
+      chdir: ~/WorkDir/integration/letp_wrapper
+
+  - name: test pipenv available
+    shell: pipenv --venv
+    args:
+      chdir: ~/WorkDir/integration/letp_wrapper
+
+  - name: test pytest version
+    shell: pipenv run pip show pytest
+    register: pytest_ver
+    failed_when: 'not "6.2.5" and not "7.0.1" in pytest_ver.stdout'
+    args:
+      chdir: ~/WorkDir/integration/letp_wrapper
+
+  - name: test pipenv install succesful
+    shell: |
+      pipenv run pip show autoflasher
+    register: source_init
+    failed_when: source_init.rc > 0
+    args:
+      chdir: ~/WorkDir/integration/letp_wrapper
+
+  become: yes
+  become_user: vagrant

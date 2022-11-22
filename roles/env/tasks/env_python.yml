@@ -1,0 +1,80 @@
+---
+
+- block:
+  - name: check pyenv exist
+    command:  ~/.pyenv/libexec/pyenv --version
+    register: pyenv_ver
+    failed_when : pyenv_ver.rc > 2
+    changed_when: 0 < pyenv_ver.rc <= 2
+
+  - block: 
+    - name: Git Clone pyenv
+      git:
+        repo: https://github.com/pyenv/pyenv.git 
+        dest: ~/.pyenv
+        clone: yes
+        update: yes
+
+    - name: Copy .bashrc to ~
+      become_user: root
+      copy:
+        src: ~/.bashrc
+        dest: /home/vagrant/.bashrc
+
+    - name: Add path etc to .bashrc.
+      lineinfile:
+        dest: "~/.bashrc"
+        state: present
+        create: yes
+        line: "{{ item }}"
+      with_items:
+        - 'export PYENV_ROOT="$HOME/.pyenv"'
+        - 'export PATH="$PYENV_ROOT/bin:$PATH"'
+        - 'if command -v pyenv 1>/dev/null 2>&1; then'
+        - ' eval "$(pyenv init -)"'
+        - 'fi'
+
+    - name: Ensure .pyenv permissions are set properly
+      file: path=~/.pyenv
+            recurse=yes
+            owner=vagrant
+            group=vagrant
+            state=directory
+
+    when: 0 < pyenv_ver.rc <= 2
+
+  - name: restart shell
+    shell: exec $SHELL
+
+  - name: check python version
+    command: python3 -V
+    register: python_ver
+    changed_when: "not '3.6.9' in python_ver.stdout"
+
+  - block: 
+    - name: Check global version of python
+      shell:  ~/.pyenv/libexec/pyenv versions
+      register: python_glob_ver
+      changed_when: "not '3.6.9' in python_glob_ver.stdout"
+
+    - block:
+      - name: Install default python version
+        shell: |
+          . ~/.bashrc &&  ~/.pyenv/libexec/pyenv install 3.6.9
+          creates="~/.pyenv/versions/3.6.9"
+
+      when: "not '3.6.9' in python_glob_ver.stdout"
+
+    - name: check python version
+      shell: ~/.pyenv/libexec/pyenv versions
+      
+    - name: Set global to python 3.6.9
+      shell:  ~/.pyenv/libexec/pyenv global 3.6.9
+
+    when: "not '3.6.9' in python_ver.stdout"
+
+  - name: install pipenv
+    command: pip install pipenv==2021.5.29
+
+  become: yes
+  become_user: vagrant

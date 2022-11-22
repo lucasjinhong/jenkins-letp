@@ -1,0 +1,10 @@
+---
+
+- block:
+  - name: remove pipenv
+    shell: pipenv --rm
+    args:
+      chdir: ~/WorkDir/integration/letp_wrapper
+
+  become: yes
+  become_user: vagrant

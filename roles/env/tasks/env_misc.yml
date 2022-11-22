@@ -1,0 +1,44 @@
+---
+
+- block:
+
+  - block: #Grant access of usb port
+    - name: Access ttyUSB0
+      command: chown vagrant ttyUSB0
+      register: access
+      failed_when: access.rc > 2 
+      args:
+        chdir: /dev/
+
+    - name: Access ttyUSB1
+      command: chown vagrant ttyUSB1
+      register: access
+      failed_when: access.rc > 2
+      args:
+        chdir: /dev/  
+
+    become_user: root
+
+  - name: copy file to testbed
+    ansible.builtin.copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: vagrant
+      group: vagrant
+    with_items:
+      - { src: '~/WorkDir/integration/letp_wrapper/letp_wrapper/autoconfigure.py', 
+          dest: '~/WorkDir/integration/letp_wrapper/letp_wrapper/autoconfigure.py'}
+      - { src: '~/WorkDir/integration/letp_wrapper/letp_wrapper/sim.py', 
+          dest: '~/WorkDir/integration/letp_wrapper/letp_wrapper/sim.py'}
+      - { src: '~/WorkDir/integration/letp_wrapper/config.yaml', 
+          dest: '~/WorkDir/integration/letp_wrapper/config.yaml' }
+      - { src: '~/WorkDir/integration/letp/sanity/HL78xx', 
+          dest: '~/WorkDir/integration/letp/sanity/HL78xx' }
+      - { src: '~/WorkDir/integration/letp/config/hardware/numato.xml', 
+          dest: '~/WorkDir/integration/letp/config/hardware/numato.xml' }
+      - { src: '~/.local/share/virtualenvs/letp_wrapper-ITbnGHUd/lib/python3.6/site-packages/integration_libs/hl78_power_control.py', 
+          dest: '~/.local/share/virtualenvs/letp_wrapper-GH9X1oap/lib/python3.6/site-packages/integration_libs/hl78_power_control.py' }
+      - { src: '~/.local/share/virtualenvs/letp_wrapper-ITbnGHUd/lib/python3.6/site-packages/integration_libs/hl78_uart.py', 
+          dest: '~/.local/share/virtualenvs/letp_wrapper-GH9X1oap/lib/python3.6/site-packages/integration_libs/hl78_uart.py' }
+  become: yes
+  become_user: vagrant

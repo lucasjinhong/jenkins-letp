@@ -1,0 +1,11 @@
+---
+
+- block:
+  - name: remove WorkDir
+    file:
+      state: absent
+      path: ~/WorkDir
+
+  become: yes
+  become_user: vagrant
+

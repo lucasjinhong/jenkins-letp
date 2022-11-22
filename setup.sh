@@ -174,7 +174,7 @@ inventory = /etc/ansible/hosts
 interpreter_python = auto_silent
 host_key_checking = False
 
-strategy_plugins = /usr/local/lib/python2.7/dist-packages/ansible_mitogen/plugins/strategy
+strategy_plugins = /var/jenkins_home/.local/lib/python3.9/site-packages/ansible_mitogen/plugins/strategy
 strategy = mitogen_linear
 
 callback_whitelist = profile_tasks

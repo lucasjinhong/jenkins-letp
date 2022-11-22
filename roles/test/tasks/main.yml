@@ -1,4 +1,5 @@
 ---
+
 - name: Use cache from TPE
   become: yes
   become_user: root
@@ -9,6 +10,6 @@
   when: inventory_hostname.startswith('twtpe')
 
 - set_fact:
-    main_script: "{{ 'env_' + (main | default('install')) + '.yml' }}"
+    main_script: "{{ 'test_' + (main | default('env')) + '.yml' }}"
 
 - include: "{{ role_path + '/tasks/' + main_script }}"
