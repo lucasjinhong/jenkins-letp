@@ -45,6 +45,9 @@ def main():
     os.chdir(SCRIPT_PATH)
     args = get_args()
 
+    if len(args.Tests) < 1:
+        raise ValueError('Test not found')
+
     cmd_letp = 'letp_wrap -y'
     cmd_ssh =  'sshpass -p vagrant ssh -tt vagrant@'
 
