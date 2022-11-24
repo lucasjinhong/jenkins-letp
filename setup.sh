@@ -27,7 +27,7 @@ filter=${2:-.}
 
 if [ ! -d farmctrl ]; then
   git clone git://gerrit.legato/farm-control.git farmctrl
-  (cd farmctrl/cli; sudo -u root pip3 install -r requirements.txt)
+  (cd farmctrl/cli; sudo -u jenkins pip3 install -r requirements.txt)
 else
   (cd farmctrl; git pull origin master)
 fi
@@ -160,14 +160,14 @@ else
 
   #install required packages
   python3 -c "import ansible" || {
-    sudo -u root pip3 install 'ansible<v2.10' mitogen
+    sudo -u jenkins pip3 install 'ansible<v2.10' mitogen
     # ensure python3 is used
-    sudo -u root sed -i '1s@/usr/bin/python$@/usr/bin/python3@' /usr/local/bin/ansible
+    sudo -u jenkins sed -i '1s@/usr/bin/python$@/usr/bin/python3@' /usr/local/bin/ansible
   }
 
   config_line="# farm-control configured - 21-11-11"
   if [ ! -f /etc/ansible/ansible.cfg ] || ! grep -q -- "^$config_line" /etc/ansible/ansible.cfg ; then
-    sudo -u root mkdir -p /etc/ansible
+    sudo -u jenkins mkdir -p /etc/ansible
     { cat <<EOM
 [defaults]
 inventory = /etc/ansible/hosts
@@ -182,11 +182,11 @@ stdout_callback = yaml
 
 $config_line
 EOM
-    } | sudo -u root tee /etc/ansible/ansible.cfg
+    } | sudo -u jenkins tee /etc/ansible/ansible.cfg
   fi
 
   # install the inventory file
-  create_ansible_inventory | sudo -u root tee /etc/ansible/hosts >/dev/null
+  create_ansible_inventory | sudo -u jenkins tee /etc/ansible/hosts >/dev/null
 
   if false; then
     site=$(nslookup gerrit.legato | grep '^Name:' | tail | awk '{print $2}' | cut -d. -f1)
