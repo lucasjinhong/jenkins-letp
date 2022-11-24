@@ -22,6 +22,8 @@ def get_testbed_ip(id):
     return ip_addr
 
 def print_result(process):
+    flag = 0
+
     for line in iter(process.stdout.readline, ""):
         if line == 'END\n':
             break
@@ -30,11 +32,14 @@ def print_result(process):
 
         #Error Handler
         if 'Error' in line:
-            raise line
+            flag = 1
 
     #to catch the lines up to logout
     for line in iter(process.stdout.readline, ""): 
         print(line, end='')
+
+    if flag == 1:
+        raise Exception('Test Failed')
 
 def main():
     os.chdir(SCRIPT_PATH)
