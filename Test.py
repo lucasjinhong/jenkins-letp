@@ -22,7 +22,7 @@ def get_testbed_ip(id):
     return ip_addr
 
 def print_result(process):
-    for line in process.stdout:
+    for line in iter(process.stdout.readline, ""):
         if line == 'END\n':
             break
 
@@ -33,7 +33,7 @@ def print_result(process):
             raise line
 
     #to catch the lines up to logout
-    for line in process.stdout: 
+    for line in iter(process.stdout.readline, ""): 
         print(line, end='')
 
 def main():
