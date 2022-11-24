@@ -13,12 +13,28 @@ def get_args():
     return parser.parse_args()
 
 def get_testbed_ip(id):
-    if len(id) == 17:
+    try:
         ip_addr = subprocess.check_output(['./bed.sh', '-b', id])
         ip_addr = ip_addr.decode('ascii').split('\t')[1]
-    else:
-        ip_addr = 0
+    except:
+        raise ValueError('Testbed_ID not found')
+
     return ip_addr
+
+def print_result(process):
+    for line in process.stdout:
+        if line == 'END\n':
+            break
+
+        print(line, end='')
+
+        #Error Handler
+        if 'Error' in line:
+            raise line
+
+    #to catch the lines up to logout
+    for line in process.stdout: 
+        print(line, end='')
 
 def main():
     os.chdir(SCRIPT_PATH)
@@ -37,8 +53,8 @@ def main():
 
     sshProcess = subprocess.Popen(cmd_ssh,
                                 shell=True,
-                                stdin = subprocess.PIPE, 
-                                stdout = subprocess.PIPE,
+                                stdin=subprocess.PIPE, 
+                                stdout=subprocess.PIPE,
                                 universal_newlines=True,
                                 bufsize=0)
 
@@ -50,14 +66,7 @@ def main():
     sshProcess.stdin.write('logout\n')
     sshProcess.stdin.close()
 
-    for line in sshProcess.stdout:
-        if line == 'END\n':
-            break
-        print(line,end='')
-
-    #to catch the lines up to logout
-    for line in sshProcess.stdout: 
-        print(line,end='')
+    print_result(sshProcess)
     
 if __name__ == '__main__':
     main()
