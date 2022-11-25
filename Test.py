@@ -6,6 +6,9 @@ SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 def get_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument("-r", "--generate_report",
+                    choices=["latest", "last", "none"],
+                    help="Generate an HTML test report")
     parser.add_argument('Testbed_ID', 
                         help='List the Tesbed_ID to run the tests')
     parser.add_argument('Tests', nargs='*',
@@ -50,6 +53,11 @@ def main():
 
     cmd_letp = 'letp_wrap -y'
     cmd_ssh =  'sshpass -p vagrant ssh -tt vagrant@'
+
+    if args.generate_report == 'latest':
+        cmd_letp += ' -r latest'
+    elif args.generate_report == 'last':
+        cmd_letp += ' -r last'
 
     for i in args.Tests:
         cmd_letp = cmd_letp + ' ' + i
