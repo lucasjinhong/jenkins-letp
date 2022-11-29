@@ -1,6 +1,8 @@
 import subprocess
+import datetime
 import os
 import argparse
+import paramiko
 
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -30,7 +32,6 @@ def print_result(process):
     for line in iter(process.stdout.readline, ""):
         if line == 'END\n':
             break
-
         print(line, end='')
 
         #Error Handler
@@ -62,27 +63,31 @@ def main():
     for i in args.Tests:
         cmd_letp = cmd_letp + ' ' + i
 
-    cmd_ssh = cmd_ssh+ get_testbed_ip(args.Testbed_ID)
+    testbed_ip = get_testbed_ip(args.Testbed_ID)
+    cmd_ssh = cmd_ssh + testbed_ip
 
     print('Test to run: ', args.Tests)
     print('Connect to Testbed: ', args.Testbed_ID)
 
-    sshProcess = subprocess.Popen(cmd_ssh,
+    ssh_process = subprocess.Popen(cmd_ssh,
                                 shell=True,
                                 stdin=subprocess.PIPE, 
                                 stdout=subprocess.PIPE,
                                 universal_newlines=True,
                                 bufsize=0)
 
-    sshProcess.stdin.write('cd WorkDir/integration/letp_wrapper\n')
-    sshProcess.stdin.write('source "$(pipenv --venv)/bin/activate"\n')
-    sshProcess.stdin.write('source init_letp.sh\n')
-    sshProcess.stdin.write(cmd_letp + '\n')
-    sshProcess.stdin.write('echo END\n')
-    sshProcess.stdin.write('logout\n')
-    sshProcess.stdin.close()
+    ssh_process.stdin.write('cd WorkDir/integration/letp_wrapper\n')
+    ssh_process.stdin.write('source "$(pipenv --venv)/bin/activate"\n')
+    ssh_process.stdin.write('source init_letp.sh\n')
+    ssh_process.stdin.write(cmd_letp + '\n')
+    ssh_process.stdin.write('echo Clear Pycache File\n')
+    ssh_process.stdin.write('rm -rf ~/WorkDir/integration/letp/sanity/HL78xx/__pycache__ \n')
+    ssh_process.stdin.write('ls ~/WorkDir/integration/letp/sanity/HL78xx/__pycache__ \n')
+    ssh_process.stdin.write('echo END\n')
+    ssh_process.stdin.write('logout\n')
+    ssh_process.stdin.close()
 
-    print_result(sshProcess)
+    print_result(ssh_process)
     
 if __name__ == '__main__':
     main()
