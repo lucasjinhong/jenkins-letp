@@ -29,12 +29,12 @@ def get_testbed_ip(id):
 
 def check_user():
     username = pwd.getpwuid(os.getuid())[0]
-    print(username)
+    print('User  : ', username)
 
-    if username == 'lkoh':
-        local_path = '/home/lkoh/TestBed_Control/bed-control/Testing/'
-    else:
+    if username == 'jenkins':
         local_path = '/var/jenkins_home/workspace/Lucas_Test/Testing/'
+    else:
+        local_path = '/home/' + username + '/TestBed_Control/bed-control/Testing/'
 
     return local_path
 
