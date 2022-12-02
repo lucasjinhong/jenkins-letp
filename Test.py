@@ -172,6 +172,7 @@ def main():
     print('\nStart Getting Logs and Reports directory')
     for path in [log_path, report_path]:
         if len(path) > 0:
+            print(type(testbed_ip), testbed_ip)
             local_path.append(get_test_report(testbed_ip, time, path, version_name))
 
     print('\nStart Publishing Logs and reports to Jasmine2')
