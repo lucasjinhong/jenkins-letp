@@ -41,7 +41,8 @@ def check_user():
 def get_test_report(ip_addr, time, remote_path, version_name):
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(str(ip_addr), username='vagrant', password='vagrant')
+    ip_addr='10.29.51.83'
+    ssh_client.connect(ip_addr, username='vagrant', password='vagrant')
 
     ftp_client=ssh_client.open_sftp()
 
