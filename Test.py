@@ -28,7 +28,7 @@ def get_testbed_ip(id):
     return ip_addr
 
 def check_user():
-    username = os.getlogin()
+    username = os.environ.get('USERNAME')
 
     if username == 'lkoh':
         local_path = '/home/lkoh/TestBed_Control/bed-control/Testing/'
