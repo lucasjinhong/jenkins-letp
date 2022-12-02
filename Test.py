@@ -31,6 +31,7 @@ def get_test_report(ip_addr, time, remote_path, version_name):
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh_client.connect(hostname=ip_addr, port=22, username='vagrant', password='vagrant')
+
     ftp_client=ssh_client.open_sftp()
 
     dir_name = remote_path.split('/')[0]
@@ -68,6 +69,7 @@ def get_test_report(ip_addr, time, remote_path, version_name):
         local_file_path = local_path + file
         ftp_client.get(remote_file_path,local_file_path)
     ftp_client.close()
+    ssh_client.close()
     
     # for upload file to jasmine2
     local_path = '/'.join(local_path.split('/')[:-1]) + '/'
