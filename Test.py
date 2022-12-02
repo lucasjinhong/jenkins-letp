@@ -1,6 +1,6 @@
 import subprocess
 import datetime
-import os
+import os, pwd
 import argparse
 import paramiko
 from re import findall
@@ -28,7 +28,7 @@ def get_testbed_ip(id):
     return ip_addr
 
 def check_user():
-    username = os.environ.get('USERNAME')
+    username = pwd.getpwuid(os.getuid())[0]
     print(username)
 
     if username == 'lkoh':
