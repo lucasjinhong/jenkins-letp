@@ -27,6 +27,16 @@ def get_testbed_ip(id):
 
     return ip_addr
 
+def check_user():
+    username = os.getlogin()
+
+    if username == 'lkoh':
+        local_path = '/home/lkoh/TestBed_Control/bed-control/Testing/'
+    else:
+        local_path = '/var/jenkins_home/workspace/Lucas_Test/Testing/'
+
+    return local_path
+
 def get_test_report(ip_addr, time, remote_path, version_name):
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -36,7 +46,7 @@ def get_test_report(ip_addr, time, remote_path, version_name):
 
     dir_name = remote_path.split('/')[0]
     remote_path = '/home/vagrant/WorkDir/integration/' + remote_path
-    local_path = '/home/lkoh/TestBed_Control/bed-control/Testing/'
+    local_path = check_user()
 
     # check if local directory exits
     try:
