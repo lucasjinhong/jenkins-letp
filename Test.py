@@ -1,6 +1,6 @@
 import subprocess
 import datetime
-import os
+import os, time
 import argparse
 import paramiko
 from re import findall
@@ -118,7 +118,7 @@ def print_result(process):
 def main():
     os.chdir(SCRIPT_PATH)
     args = get_args()
-    time = str(datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+    process_time = str(datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
     local_path = []
 
     if len(args.Tests) < 1:
@@ -168,11 +168,13 @@ def main():
 
     version_name = log_path.split('/')[2]
 
+    time.sleep(40)
+
     # Getting remote directory to local
     print('\nStart Getting Logs and Reports directory')
     for path in [log_path, report_path]:
         if len(path) > 0:
-            local_path.append(get_test_report('10.29.51.83', time, path, version_name))
+            local_path.append(get_test_report(testbed_ip, process_time, path, version_name))
 
     print('\nStart Publishing Logs and reports to Jasmine2')
     for path in local_path:
