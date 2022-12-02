@@ -35,10 +35,16 @@ def get_test_report(ip_addr, time, remote_path, version_name):
 
     dir_name = remote_path.split('/')[0]
     remote_path = '/home/vagrant/WorkDir/integration/' + remote_path
-    local_path = '/home/lkoh/TestBed_Control/bed-control/Testing/' + version_name + '/'
+    local_path = '/home/lkoh/TestBed_Control/bed-control/Testing/'
 
     # check if local directory exits
     try:
+        os.mkdir(local_path)        # Create Testing directory
+    except:
+        pass
+
+    try:
+        local_path = local_path + version_name + '/'
         os.mkdir(local_path)        # Create version directory
     except:
         pass
