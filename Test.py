@@ -54,7 +54,7 @@ def get_test_report(ip_addr, time, remote_path, version_name):
     os.mkdir(local_path)
 
     remote_files = ftp_client.listdir(remote_path)
-    print('moving', remote_path, 'to', local_path)
+    print('remote: ', remote_path, '\n local: ', local_path)
 
     # move file from remote to local
     for file in remote_files:
@@ -73,7 +73,6 @@ def publish_test_report(version_name, local_path):
     time = local_path.split('/')[-3]
     jasmine2_dir_name = local_path.split('/')[-2]
 
-    print('publish', local_path, 'to', jasmine2_path)
     subprocess.run(['smbclient', jasmine2_path, '-c', 'prompt OFF'
                     + '; mkdir ' + version_name + '; cd ' + version_name 
                     + '; mkdir ' + time + '; cd ' + time
@@ -103,13 +102,10 @@ def print_result(process):
         elif 'letp_wrapper_reports' in line:
             report_path = line
 
-    if flag == 1:
-        raise
-
     log_path = ''.join(x for x in findall(r'[\w+.+]+/', log_path)[-4:])
     report_path = ''.join(x for x in findall(r'[\w+.+]+/', report_path)[-2:])
 
-    return log_path, report_path
+    return log_path, report_path, flag
 
 def main():
     os.chdir(SCRIPT_PATH)
@@ -159,7 +155,7 @@ def main():
     ssh_process.stdin.close()
 
     # Take path of log and report and print_result of test
-    log_path, report_path = print_result(ssh_process)
+    log_path, report_path, flag = print_result(ssh_process)
     print('\nTest END')
 
     version_name = log_path.split('/')[2]
@@ -175,7 +171,9 @@ def main():
         print('\nPublishing: ' + path.split('/')[-2])
         publish_test_report(version_name, path)
 
-    print('\nDONE')
+    print('\nDONE\n')
+    if flag == 1:
+        raise Exception('Test FAILED')
     
 if __name__ == '__main__':
     main()
