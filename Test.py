@@ -38,8 +38,6 @@ def get_test_report(ip_addr, time, remote_path, version_name):
     remote_path = '/home/vagrant/WorkDir/integration/' + remote_path
     local_path = '/home/lkoh/TestBed_Control/bed-control/Testing/'
 
-    return 
-
     # check if local directory exits
     try:
         os.mkdir(local_path)        # Create Testing directory
