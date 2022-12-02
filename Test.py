@@ -30,7 +30,7 @@ def get_testbed_ip(id):
 def get_test_report(ip_addr, time, remote_path, version_name):
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(hostname=ip_addr, username='vagrant', password='vagrant')
+    ssh_client.connect(hostname=ip_addr, port=22, username='vagrant', password='vagrant')
     ftp_client=ssh_client.open_sftp()
 
     dir_name = remote_path.split('/')[0]
@@ -54,7 +54,7 @@ def get_test_report(ip_addr, time, remote_path, version_name):
     os.mkdir(local_path)
 
     remote_files = ftp_client.listdir(remote_path)
-    print('remote: ', remote_path, '\n local: ', local_path)
+    print('remote: ', remote_path, '\nlocal : ', local_path)
 
     # move file from remote to local
     for file in remote_files:
