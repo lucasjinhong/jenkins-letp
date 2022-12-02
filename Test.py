@@ -30,7 +30,7 @@ def get_testbed_ip(id):
 def get_test_report(ip_addr, time, remote_path, version_name):
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(hostname=ip_addr, port=22, username='vagrant', password='vagrant')
+    ssh_client.connect(ip_addr, username='vagrant', password='vagrant')
 
     ftp_client=ssh_client.open_sftp()
 
