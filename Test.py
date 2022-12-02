@@ -38,6 +38,8 @@ def get_test_report(ip_addr, time, remote_path, version_name):
     remote_path = '/home/vagrant/WorkDir/integration/' + remote_path
     local_path = '/home/lkoh/TestBed_Control/bed-control/Testing/'
 
+    return 
+
     # check if local directory exits
     try:
         os.mkdir(local_path)        # Create Testing directory
@@ -174,7 +176,8 @@ def main():
     print('\nStart Getting Logs and Reports directory')
     for path in [log_path, report_path]:
         if len(path) > 0:
-            local_path.append(get_test_report(testbed_ip, process_time, path, version_name))
+            path_name = get_test_report(testbed_ip, process_time, path, version_name)
+            local_path.append(path_name)
 
     print('\nStart Publishing Logs and reports to Jasmine2')
     for path in local_path:
