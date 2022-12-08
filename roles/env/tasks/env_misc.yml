@@ -33,7 +33,7 @@
       - { src: '~/WorkDir/integration/letp_wrapper/config.yaml', 
           dest: '~/WorkDir/integration/letp_wrapper/config.yaml' }
       - { src: '~/WorkDir/integration/letp/sanity/HL78xx', 
-          dest: '~/WorkDir/integration/letp/sanity/HL78xx' }
+          dest: '~/WorkDir/integration/letp/sanity' }
       - { src: '~/WorkDir/integration/letp/config/hardware/numato.xml', 
           dest: '~/WorkDir/integration/letp/config/hardware/numato.xml' }
       - { src: '~/.local/share/virtualenvs/letp_wrapper-ITbnGHUd/lib/python3.6/site-packages/integration_libs/hl78_power_control.py', 

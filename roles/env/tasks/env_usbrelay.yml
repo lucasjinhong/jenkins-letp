@@ -27,7 +27,7 @@
         EOM
         udevadm control --reload-rules && udevadm trigger
 
-    - include: "{{ role_path + '/tasks/' + 'bed_reboot.yml' }}"
+    - include: "{{ 'roles/bed/tasks/' + 'bed_reboot.yml' }}"
 
     when: usbrelay_deb.rc == 1
     become_user: root
