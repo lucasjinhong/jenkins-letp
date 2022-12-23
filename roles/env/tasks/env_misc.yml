@@ -26,19 +26,19 @@
       owner: vagrant
       group: vagrant
     with_items:
-      - { src: '~/WorkDir/integration/letp_wrapper/letp_wrapper/autoconfigure.py', 
+      - { src: 'autoconfigure.py', 
           dest: '~/WorkDir/integration/letp_wrapper/letp_wrapper/autoconfigure.py'}
-      - { src: '~/WorkDir/integration/letp_wrapper/letp_wrapper/sim.py', 
+      - { src: 'sim.py', 
           dest: '~/WorkDir/integration/letp_wrapper/letp_wrapper/sim.py'}
-      - { src: '~/WorkDir/integration/letp_wrapper/config.yaml', 
-          dest: '~/WorkDir/integration/letp_wrapper/config.yaml' }
-      - { src: '~/WorkDir/integration/letp/sanity/HL78xx', 
+      - { src: 'config.yaml', 
+          dest: '~/WorkDir/integration/letp_wrapper//config.yaml' }
+      - { src: 'HL78xx', 
           dest: '~/WorkDir/integration/letp/sanity' }
-      - { src: '~/WorkDir/integration/letp/config/hardware/numato.xml', 
+      - { src: 'numato.xml', 
           dest: '~/WorkDir/integration/letp/config/hardware/numato.xml' }
-      - { src: '~/.local/share/virtualenvs/letp_wrapper-ITbnGHUd/lib/python3.6/site-packages/integration_libs/hl78_power_control.py', 
+      - { src: 'hl78_power_control.py', 
           dest: '~/.local/share/virtualenvs/letp_wrapper-GH9X1oap/lib/python3.6/site-packages/integration_libs/hl78_power_control.py' }
-      - { src: '~/.local/share/virtualenvs/letp_wrapper-ITbnGHUd/lib/python3.6/site-packages/integration_libs/hl78_uart.py', 
+      - { src: 'hl78_uart.py', 
           dest: '~/.local/share/virtualenvs/letp_wrapper-GH9X1oap/lib/python3.6/site-packages/integration_libs/hl78_uart.py' }
   become: yes
   become_user: vagrant

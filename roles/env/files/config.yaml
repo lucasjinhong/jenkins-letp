@@ -1,0 +1,79 @@
+autotest:
+
+  # Information to "sudo" some commands
+  sudo: 12345678
+
+  # Local .ua file for local update test cases
+  local_avms_path: 
+  local_avms99_path: 
+
+  # AVMS info
+  avms_url: https://eu.airvantage.net
+  avms_client_id: 3155a297e64749ca9648b2993771480b
+  avms_client_secret: 14f8e440d074421b9126e542af1d5a82
+  avms_company: d7378fc019c649bf8131afe3d3eb3663
+  avms_username: jliang@sierrawireless.com
+  avms_password: Sierra_20012
+  avms_uid: 5c9f66eb1c6c4866828f62ce89834d2c
+  AutoAVMS_refVersion:
+  SOFT_INI_Soft_Version:
+  SOFT_INI_Fota_Version:
+  #avms_url: https://eu.airvantage.net
+  #avms_client_id: 96373436abf047d6b0bc2c9eab923bf7
+  #avms_client_secret: dfdfcc287b3f4ecfa5fb288c358f2ba3
+  #avms_company: 5638424e83894baf91ed1b21650f1354
+  #avms_username: RichmondFirmwareIntegration@sierrawireless.com
+  #avms_password: a1b2c3$$
+  #avms_uid:
+  #AutoAVMS_refVersion:
+  #SOFT_INI_Soft_Version:
+  #SOFT_INI_Fota_Version:
+
+  # Below are some default configuration for Richmond Intergration Team
+  # Server and FTP info for FTP test cases
+  IntegrationVMServer: cnhkg-ev-swtst01.sierrawireless.com
+  ftp_username: sierra
+  ftp_passwd: hisierra
+
+  # Path of the network setting xml
+  # Possible value: m1, nb1, 2g
+  network_type: m1
+
+  # Default pin1 for Amarisoft is 1111
+  # Default pin2 for Amarisoft is 2222
+  # This is auto set for Amarisoft SIM
+  #pin1_code: 3699
+  #pin2_code: 5678
+  pin1_code: 1234
+  pin2_code: 5678
+
+  # Default puk1 for Amarisoft is 11111111
+  # Default puk2 for Amarisoft is 22222222
+  # This is auto set for Amarisoft SIM
+  #puk1_code: 25339086
+  #puk2_code: 25339086
+  puk1_code: 12345678
+  puk2_code: 87654321
+
+  # Voice number is normally last 3 digits of your IMSI for Amarisoft SIM
+  # This is auto set for Amarisoft SIM
+  #sim_voice_number: 0905176331
+  Voice_Number: 1230000001
+
+  # Information of IPs, use in some TCP test case
+  #amarisoft_address: carmd-amarisoft-int01
+  #amarisoft_ip: 10.1.0.110
+  amarisoft_address: twtpe-ed-swams1
+  amarisoft_ip: 10.29.51.30
+
+
+  # Module ip address when connect to network
+  device_ip: 192.168.3.2
+
+  # Legato Flake test server and port
+  legato_flake_server: flake.legato.io
+  flake_echo_port: 6000
+  flake_ftp_username: user
+  flake_ftp_passwd: l3g4t0_123
+
+

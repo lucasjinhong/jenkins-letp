@@ -1,0 +1,21 @@
+<test>
+    <hardware>
+        <!-- Controller identification -->
+        <power_supply>
+            <type>numato</type>
+
+            <!--If the controller controls multiple instances (i.e relays from 0 to 8) -->
+            <port_nb>0</port_nb>
+            <control_port_nb>1</control_port_nb>
+            <username></username>
+            <password></password>
+
+            <!-- UART Port configuration -->
+            <com>
+                <port>/dev/hidraw0</port>
+                <rtscts>0</rtscts>
+                <speed>115200</speed>
+            </com>
+        </power_supply>
+    </hardware>
+</test>
